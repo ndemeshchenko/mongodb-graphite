@@ -1,3 +1,4 @@
+require 'pry'
 require 'mongo'
 require 'simple-graphite'
 
@@ -83,6 +84,7 @@ module MongodbGraphite
 
     def connection
       @connection ||= Mongo::MongoClient.new(host, port, :slave_ok => true, :connect_timeout => 5, :pool_timeout => 5)
+
     end
 
     def stats

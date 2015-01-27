@@ -1,12 +1,14 @@
 #!/usr/bin/env ruby
 
-require 'mongodb-graphite'
+require 'pry'
+# require File.join('..', 'lib', 'mongodb-graphite')
+require_relative "../lib/mongodb-graphite"
 require 'optparse'
 require 'daemons'
 require 'simple-graphite'
 
-conf_dir = File.expand_path(ENV['MONGODB_GRAPHITE_DIR'] || '.')
-conf_file = ENV['MONGODB_GRAPHITE_FILE'] || 'mongodb-graphite.yml'
+conf_dir = '.'
+conf_file = 'mongodb-graphite.yml'
 
 config = MongodbGraphite::Configuration.new(conf_dir, conf_file)
 
@@ -26,7 +28,7 @@ g_host, g_port = config['graphite'].split(':')
   Dir.mkdir config[d] unless Dir.exist?(config[d])
 end
 
-Daemons.run_proc(config['daemon_name'], daemon_options) do
+# Daemons.run_proc(config['daemon_name'], daemon_options) do
   @instance_list = MongodbGraphite::InstanceList.new(config)
   loop do
     g = Graphite.new( :host => g_host, :port => g_port || '3333' )
@@ -43,4 +45,4 @@ Daemons.run_proc(config['daemon_name'], daemon_options) do
     end
     sleep (config['interval'] || 5)
   end
-end
+# end
